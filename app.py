@@ -8,4 +8,4 @@ app=Flask(__name__)
 def endpoint00():
     nombre=request.form.get("nombreusuari", type=str)
     edad=request.form.get("edadusuari", type=int)
-    return render_template("tobuilddd.html",nombreusuari=nombre,edadusuari=edad)
+    return render_template("index.html",nombreusuari=nombre,edadusuari=edad)

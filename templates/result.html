@@ -4,35 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados SNMP - Ferran&Sergi</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="contenedor">
         <h2>Resultados de la Consulta SNMP</h2>
         
-        <!-- Sección de información general -->
-        <div class="form-group">
-            <label>Agente:</label>
-            <div class="valor-result">{{ agent }}</div>
-        </div>
-        
-        <div class="form-group">
-            <label>Versión SNMP:</label>
-            <div class="valor-result">{{ version }}</div>
-        </div>
+        {% if resultado %}
+        <table class="tabla-resultados">
+            <thead>
+                <tr>
+                    <th>OID</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in resultado %}
+                {% if '=' in item %}
+                <tr>
+                    <td>{{ item.split('=')[0].strip() }}</td>
+                    <td>{{ item.split('=')[1].strip() }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No se obtuvieron resultados.</p>
+        {% endif %}
 
-        <!-- Resultados de OID -->
-        <div class="grupo-resultados">
-            <h3>Respuestas OID</h3>
-            {% for oid, valor in resultados.items() %}
-            <div class="form-group resultado-item">
-                <label>{{ oid }}</label>
-                <div class="valor-oid">{{ valor }}</div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <a href="/" class="botoncito boton-volver">Volver al formulario</a>
+        <a href="/endpoint00" class="botoncito">Volver al formulario :P</a>
     </div>
 </body>
 </html>

@@ -3,7 +3,7 @@ from flask import request
 
 app=Flask(__name__)
 
-@app.route("/endpoint00", methods=['POST'])
+@app.route("/endpoint00", methods=['GET'])
 
 def endpoint00():
     nombre=request.form.get("nombreusuari", type=str)

@@ -1,13 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>"Resultados Query - Projecte SNMP - Ferran&Sergi"</title>
+    <title>Resultados SNMP - Ferran&Sergi</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
+    <div class="contenedor">
+        <h2>Resultados de la Consulta SNMP</h2>
+        
+        <!-- Sección de información general -->
+        <div class="form-group">
+            <label>Agente:</label>
+            <div class="valor-result">{{ agent }}</div>
+        </div>
+        
+        <div class="form-group">
+            <label>Versión SNMP:</label>
+            <div class="valor-result">{{ version }}</div>
+        </div>
 
-    <p>Listar todos los resultados del snmpbulk, seguramente...</p>
+        <!-- Resultados de OID -->
+        <div class="grupo-resultados">
+            <h3>Respuestas OID</h3>
+            {% for oid, valor in resultados.items() %}
+            <div class="form-group resultado-item">
+                <label>{{ oid }}</label>
+                <div class="valor-oid">{{ valor }}</div>
+            </div>
+            {% endfor %}
+        </div>
 
+        <a href="/" class="botoncito boton-volver">Volver al formulario</a>
+    </div>
 </body>
 </html>

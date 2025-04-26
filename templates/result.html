@@ -3,37 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultados SNMP - Ferran&Sergi</title>
+    <title>Resultados SNMP - Projecte SNMP</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="contenedor">
         <h2>Resultados de la Consulta SNMP</h2>
-        
+
         {% if resultado %}
-        <table class="tabla-resultados">
-            <thead>
-                <tr>
-                    <th>OID</th>
-                    <th>Valor</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in resultado %}
-                {% if '=' in item %}
-                <tr>
-                    <td>{{ item.split('=')[0].strip() }}</td>
-                    <td>{{ item.split('=')[1].strip() }}</td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
+            <table class="tabla-resultados">
+                <thead>
+                    <tr>
+                        <th>OID</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in resultado %}
+                        {% if '=' in item %}
+                            <tr>
+                                <td>{{ item.split('=')[0].strip() }}</td>
+                                <td>{{ item.split('=')[1].strip() }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2">{{ item }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
         {% else %}
-        <p>No se obtuvieron resultados.</p>
+            <p>No se obtuvieron resultados.</p>
         {% endif %}
 
-        <a href="/endpoint00" class="botoncito">Volver al formulario :P</a>
+        <a href="{{ url_for('snmp_form') }}" class="botoncito">Volver al formulario :P</a>
     </div>
 </body>
 </html>

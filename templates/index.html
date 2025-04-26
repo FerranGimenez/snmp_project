@@ -1,37 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EndPoint Formulario - Projecte SNMP - Ferran&Sergi</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>Formulario SNMP - Projecte SNMP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="contenedor">
         <h2>Formulario de Configuración SNMP</h2>
-        <form action="/endpoint00" method="POST">
+        <form action="{{ url_for('snmp_form') }}" method="POST">
             <div class="form-group">
-                <label for="version">Versión:</label>
+                <label for="version">Versión (1 / 2c):</label>
                 <input type="text" name="version" id="version" required>
             </div>
             <div class="form-group">
-                <label for="rocommunity">Código ReadOnly:</label>
+                <label for="rocommunity">Comunidad (public/private):</label>
                 <input type="text" name="rocommunity" id="rocommunity" required>
             </div>
             <div class="form-group">
-                <label for="agent">Agente:</label>
+                <label for="agent">Agente (IP o host):</label>
                 <input type="text" name="agent" id="agent" required>
-            </div>
-            <div class="form-group">
-                <label for="mib">MIB:</label>
-                <input type="text" name="mib" id="mib" required>
             </div>
             <div class="form-group">
                 <label for="oid">OID:</label>
                 <input type="text" name="oid" id="oid" required>
             </div>
+            <div class="form-group">
+                <label for="operacion">Operación:</label>
+                <select name="operacion" id="operacion" required>
+                    <option value="GET">SNMPGET</option>
+                    <option value="NEXT">SNMPNEXT</option>
+                    <option value="BULKWALK">SNMPBULKWALK</option>
+                    <option value="SET">SNMPSET</option>
+                </select>
+            </div>
+            <div class="form-group" id="div-new-value" style="display: none;">
+                <label for="new_value">Nuevo valor (solo para SET):</label>
+                <input type="text" name="new_value" id="new_value">
+            </div>
             <button type="submit" class="botoncito">Enviar petición :)</button>
         </form>
     </div>
+
+    <script>
+        const selectOp = document.getElementById('operacion');
+        const divNew = document.getElementById('div-new-value');
+        selectOp.addEventListener('change', () => {
+            if (selectOp.value === 'SET') {
+                divNew.style.display = 'block';
+                document.getElementById('new_value').required = true;
+            } else {
+                divNew.style.display = 'none';
+                document.getElementById('new_value').required = false;
+            }
+        });
+    </script>
 </body>
 </html>

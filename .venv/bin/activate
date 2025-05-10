@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV=/home/ferry/asix/m09/F1/snmp_project/.venv
+VIRTUAL_ENV=/home/ferry/asix/m09/snmp_project/.venv
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

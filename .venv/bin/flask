@@ -1,4 +1,4 @@
-#!/home/ferry/asix/m09/F1/snmp_project/.venv/bin/python3
+#!/home/ferry/asix/m09/snmp_project/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

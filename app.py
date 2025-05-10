@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 import asyncio
 from pysnmp.hlapi.v3arch.asyncio import *
 from concurrent.futures import ThreadPoolExecutor
+import mysql.connector
 
 app = Flask(__name__)
 executor = ThreadPoolExecutor()
@@ -9,12 +10,12 @@ executor = ThreadPoolExecutor()
 @app.route('/endpoint00', methods=['GET', 'POST'])
 def snmp_form():
     if request.method == 'POST':
-        version     = request.form['version']       
-        comunidad   = request.form['rocommunity']   
-        agente      = request.form['agent']         
-        oid         = request.form['oid']           
-        operacion   = request.form['operacion']     
-        nuevo_valor = request.form.get('new_value') 
+        version = request.form['version']
+        comunidad = request.form['rocommunity']
+        agente = request.form['agent']
+        oid = request.form['oid']
+        operacion = request.form['operacion']
+        nuevo_valor = request.form.get('new_value')
 
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -25,7 +26,15 @@ def snmp_form():
 
         return render_template('result.html', resultado=resultado)
 
-    return render_template('index.html')
+    # Cargar OIDs para el desplegable
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM oids")
+    oids = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    return render_template('index.html', oids=oids)
 
 
 async def dispatch_snmp_async(version, comunidad, agente, oid, operacion, nuevo_valor=None):
@@ -140,6 +149,53 @@ async def snmp_set(mp_model, comunidad, agente, oid, nuevo_valor):
     if errStatus:
         return [f"SNMP Error: {errStatus.prettyPrint()}"]
     return [f"{name.prettyPrint()} = {val.prettyPrint()}" for name, val in varBinds]
+
+#---------------------------------------------------------------------------------------
+def get_db_connection():
+    return mysql.connector.connect(
+        host="192.168.110.37",
+        user="ferransergio",
+        password="alumne",
+        database="snmp"
+    )
+# Ruta principal (formulario SNMP)
+
+
+
+# Ruta para mostrar traps
+@app.route('/traps', methods=['GET'])
+def traps():
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    query = "SELECT * FROM notifications"
+    params = []
+
+    if start_date and end_date:
+        query += " WHERE date_time BETWEEN %s AND %s"
+        params.extend([start_date, end_date])
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute(query, params)
+    traps = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    return render_template('traps.html', traps=traps)
+
+
+# Ruta para mostrar detalles de un trap específico
+@app.route('/trap/<int:trap_id>')
+def trap_details(trap_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM varbinds WHERE trap_id = %s", (trap_id,))
+    varbinds = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    return render_template('trap_details.html', varbinds=varbinds)
 
 
 if __name__ == '__main__':

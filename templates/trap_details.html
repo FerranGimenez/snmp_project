@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Trap - Projecte SNMP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="contenedor">
+        <h2>Detalles del Trap</h2>
+        <table class="tabla-resultados">
+            <thead>
+                <tr>
+                    <th>OID</th>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if varbinds %}
+                    {% for varbind in varbinds %}
+                    <tr>
+                        <td>{{ varbind.oid }}</td>
+                        <td>{{ varbind.type }}</td>
+                        <td>{{ varbind.value.decode('utf-8', errors='ignore') }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3">No hay detalles disponibles para este trap.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('traps') }}" class="botoncito">Volver a la lista de traps</a>
+    </div>
+</body>
+</html>

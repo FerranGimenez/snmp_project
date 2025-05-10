@@ -60,7 +60,7 @@ h2 {
 .botoncito {
     display: block;
     width: 100%;
-    padding: 8px;
+    padding: 2px;
     background-color: var(--primary);
     color: #fff;
     border: none;

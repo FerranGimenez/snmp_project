@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traps Recibidos - Projecte SNMP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="contenedor">
+        <h2>Traps Recibidos</h2>
+
+        <!-- Botón para ir al formulario principal -->
+        <div style="margin-bottom: 20px;">
+            <a href="{{ url_for('snmp_form') }}" class="botoncito">Volver al Formulario</a>
+        </div>
+
+        <!-- Formulario de filtrado por fecha -->
+        <form method="GET" action="{{ url_for('traps') }}">
+            <div class="form-group">
+                <label for="start_date">Fecha inicial:</label>
+                <input type="date" name="start_date" id="start_date">
+            </div>
+            <div class="form-group">
+                <label for="end_date">Fecha final:</label>
+                <input type="date" name="end_date" id="end_date">
+            </div>
+            <button type="submit" class="botoncito">Filtrar</button>
+        </form>
+
+        <!-- Tabla de traps -->
+        <table class="tabla-resultados">
+            <thead>
+                <tr>
+                    <th>Trap ID</th>
+                    <th>Fecha y Hora</th>
+                    <th>Host</th>
+                    <th>Transporte</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if traps %}
+                    {% for trap in traps %}
+                    <tr>
+                        <td><a href="{{ url_for('trap_details', trap_id=trap.trap_id) }}">{{ trap.trap_id }}</a></td>
+                        <td>{{ trap.date_time }}</td>
+                        <td>{{ trap.host }}</td>
+                        <td>{{ trap.transport }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4">No hay traps disponibles.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

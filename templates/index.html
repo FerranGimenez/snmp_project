@@ -24,7 +24,12 @@
             </div>
             <div class="form-group">
                 <label for="oid">OID:</label>
-                <input type="text" name="oid" id="oid" required>
+                <select name="oid" id="oid" required>
+                    <option value="">Selecciona un OID</option>
+                    {% for oid in oids %}
+                    <option value="{{ oid.oid }}">{{ oid.description }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <div class="form-group">
                 <label for="operacion">Operación:</label>
@@ -41,6 +46,11 @@
             </div>
             <button type="submit" class="botoncito">Enviar petición :)</button>
         </form>
+
+        <!-- Botón para ir a la página de traps -->
+        <div style="margin-top: 20px;">
+            <a href="{{ url_for('traps') }}" class="botoncito">Ver Traps Recibidos</a>
+        </div>
     </div>
 
     <script>
